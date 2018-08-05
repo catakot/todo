@@ -24,7 +24,9 @@ class MapComponent extends Component {
   }
 
   componentDidMount = () => {
-    this.createMapView();
+    if (this.props.map) {
+      this.createMapView();
+    }
   }
 
   createMapView = () => {

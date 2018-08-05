@@ -2,7 +2,10 @@ import EsriGraphic from "esri/Graphic";
 import TripStatus from 'const/tripStatus';
 import * as MapActions from 'appRedux/actions/map';
 
-export const TRIPS_CREATE = 'TRIPS_CREATE';
+export const TRIP_CREATE = 'TRIP_CREATE';
+export const TRIP_UPDATE = 'TRIP_UPDATE';
+export const TRIP_REMOVE = 'TRIP_REMOVE';
+export const TRIPS_LOADED = 'TRIPS_LOADED';
 
 export function appTrip(mapPoint) {
   return (dispatch, getState) => {
@@ -13,10 +16,10 @@ export function appTrip(mapPoint) {
       status: TripStatus.NEW
     };
 
-    var tripGraphic = createTripGraphic(mapPoint, attrs);
+    let tripGraphic = createTripGraphic(mapPoint, attrs);
 
     dispatch({
-      type: TRIPS_CREATE,
+      type: TRIP_CREATE,
       trip: tripGraphic
     });
 
@@ -24,7 +27,77 @@ export function appTrip(mapPoint) {
   };
 }
 
-function createTripGraphic(mapPoint, attrs) {
+
+export function updateTripAttrs(attrs) {
+  return (dispatch, getState) => {
+
+    let tripsCollection = getState().trips.tripsCollection;
+    let tripToUpdate = tripsCollection.find(function (trip) {
+      return trip.attributes.id == attrs.id;
+    });
+
+    let tripGraphic = createTripGraphic(tripToUpdate.geometry, attrs);
+
+    dispatch(MapActions.removePinFromMap(tripToUpdate));
+    dispatch(MapActions.addPinToMap(tripGraphic));
+    dispatch({
+      type: TRIP_UPDATE,
+      trip: tripGraphic
+    });
+  };
+}
+
+export function removeTripById(id) {
+  return (dispatch, getState) => {
+
+    let tripsCollection = getState().trips.tripsCollection;
+    let tripToRemove = tripsCollection.find(function (trip) {
+      return trip.attributes.id == id;
+    });
+
+    dispatch(MapActions.removePinFromMap(tripToRemove));
+
+    dispatch({
+      type: TRIP_REMOVE,
+      trip: tripToRemove
+    });
+  };
+}
+
+export function loadTrips() {
+  return (dispatch, getState) => {
+
+    let tripsFromStorage = loadState();
+    let tripsCollection = tripsFromStorage ? tripsFromStorage.trips : [];
+    tripsCollection = tripsCollection.map(item => EsriGraphic.fromJSON(item));
+
+    
+    dispatch({
+      type: TRIPS_LOADED,
+      trips: tripsCollection
+    });
+
+    
+    dispatch(MapActions.addManyPinsToMap(tripsCollection));
+  };
+}
+
+const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem('state');
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.parse(serializedState);
+  }
+  catch (err) {
+    return undefined;
+  }
+};
+
+
+
+const createTripGraphic = (mapPoint, attrs) => {
   let geom = mapPoint.clone();
   geom.z = undefined;
   return new EsriGraphic({
@@ -32,9 +105,9 @@ function createTripGraphic(mapPoint, attrs) {
     symbol: getSymbolByTripStatus(attrs.status),
     attributes: attrs
   });
-}
+};
 
-function getSymbolByTripStatus(status) {
+const getSymbolByTripStatus = (status) => {
   switch (status) {
     case TripStatus.COMPLETED:
       return {
@@ -47,4 +120,4 @@ function getSymbolByTripStatus(status) {
         color: [255, 0, 0, 1]
       };
   }
-}
+};

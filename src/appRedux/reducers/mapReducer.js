@@ -12,12 +12,7 @@ const initialState = {
 
 
 export default function (state = initialState, action) {
-    let newState = {};
-
     switch (action.type) {
-        case MapActions.MAP_ADD_PIN:
-            return state;
-        // return Object.assign({}, state, newState);
         default:
             return state;
     }

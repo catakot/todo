@@ -5,6 +5,7 @@ import * as TripActions from 'appRedux/actions/trip';
 
 import TripListItem from './tripListItem';
 import 'styles/tripsList.css';
+import 'styles/react-toggle.css';
 
 
 class TripsListComponent extends Component {
@@ -17,27 +18,39 @@ class TripsListComponent extends Component {
 
   }
 
+  componentDidMount = () => {
+    if (!this.props.tripsIsLoaded) {
+      let { dispatch } = this.props;
+      dispatch(TripActions.loadTrips());
+    }
+  }
 
-  render() {
-    let style = {
-      position: 'absolute',
-      top: 20,
-      right: 20,
-      backgroundColor: '#ffffff87',
-      zIndex: '1',
-      padding: '10px',
-      bottom: 40,
-      overflow: 'auto',
-    };
-    return (
-      <div style={style}>
-        <ul class="list-group">
+  onRemoveItem = (id) => {
+    let { dispatch } = this.props;
+    dispatch(TripActions.removeTripById(id));
+  }
+
+  onSaveChanged = (attrs) => {
+    let { dispatch } = this.props;
+    dispatch(TripActions.updateTripAttrs(attrs));
+  }
+
+  renderTripsList = () => {
+    return (<div className="d-flex p-3 tripsList__container">
+      <div>
+        <ul className="list-group">
           {this.props.tripsCollection.map((trip, i) =>
-            <TripListItem key={i} attrs={trip.attributes} onValueChanged={() => { }}></TripListItem>
+            <TripListItem key={trip.attributes.id} attrs={trip.attributes} tripid={trip.attributes.id}
+              onSave={this.onSaveChanged} onRemove={this.onRemoveItem}>
+            </TripListItem>
           )}
         </ul>
       </div>
-    );
+    </div>);
+  }
+
+  render() {
+    return this.props.tripsCollection.length > 0 ? this.renderTripsList() : '';
   }
 }
 
@@ -45,7 +58,8 @@ class TripsListComponent extends Component {
 export default connect(
   state => {
     return {
-      tripsCollection: state.trips.tripsCollection
+      tripsCollection: state.trips.tripsCollection,
+      tripsIsLoaded: state.trips.isLoaded
     };
   }
 )(TripsListComponent);

@@ -71,6 +71,14 @@ class EsriMapManager {
   addGraphic(graphic) {
     this.userGraphicLayer.add(graphic);
   }
+
+  removeGraphic(graphic) {
+    this.userGraphicLayer.remove(graphic);
+  }
+
+  addManyGraphics(graphics) {
+    this.userGraphicLayer.addMany(graphics);
+  }
 }
 
 export default EsriMapManager;
