@@ -18,17 +18,24 @@
   <noscript>
     You need to enable JavaScript to run this app.
   </noscript>
-  <div id="root">
-
-  </div>
+  <div id="root"></div>
   <script>
+    window.dojoConfig = {
+      packages: [{
+        name: "config",
+
+        location: "<%= htmlWebpackPlugin.options.dev ? '/dist' : '/../' %>",
+
+        //location: window.location.origin + window.location.pathname.substr(0 , window.location.pathname.lastIndexOf('/') + 1 ),
+        main: "config"
+      }]
+    }
     // Make sure the basepath ends with a slash
     require(["dojo/domReady!",
       '<%= htmlWebpackPlugin.files.js[0] %>'     // <-- Your application
     ],
       function (vendor, app) {
-        window.mainApp.init();
-        // Do whatewer initialization needed here...
+        app.mapApp.render();
       });
   </script>
 </body>

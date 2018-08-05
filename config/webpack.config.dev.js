@@ -84,10 +84,16 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
+      'styles': path.resolve(__dirname, '..', 'src', 'styles'),
+      'utils': path.resolve(__dirname, '..', 'src', 'utils'),
+      'appRedux': path.resolve(__dirname, '..', 'src', 'appRedux'),
+      'config': path.resolve(__dirname, '..', 'src'),
+      'components': path.resolve(__dirname, '..', 'src', 'components'),
+      'const': path.resolve(__dirname, '..', 'src', 'const'),
     }
   },
   externals: [function (context, request, callback) {
-    if (isEsri(request) || /^config$/.test(request)) {
+    if (isEsri(request)) {
       callback(null, 'amd ' + request);
     } else {
       callback();
@@ -143,7 +149,7 @@ module.exports = {
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
               cacheDirectory: true,
-              presets: ['env', 'react'],
+              presets: ['env', 'react', 'stage-0'],
               plugins: ["transform-class-properties"]
             },
           },

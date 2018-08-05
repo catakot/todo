@@ -12,7 +12,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 //const eslintFormatter = require('react-dev-utils/eslintFormatter');
 //const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
@@ -101,6 +101,12 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
+      'styles': path.resolve(__dirname, '..', 'src', 'styles'),
+      'utils': path.resolve(__dirname, '..', 'src', 'utils'),
+      'appRedux': path.resolve(__dirname, '..', 'src', 'appRedux'),
+      'config': path.resolve(__dirname, '..', 'src'),
+      'components': path.resolve(__dirname, '..', 'src', 'components'),
+      'const': path.resolve(__dirname, '..', 'src', 'const'),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -163,7 +169,7 @@ module.exports = {
             include: paths.appSrc,
             loader: require.resolve('babel-loader'),
             options: {
-              presets: ['env', 'react'],
+              presets: ['env', 'react', 'stage-0'],
               plugins: ["transform-class-properties"],
               compact: true,
             },
@@ -207,7 +213,7 @@ module.exports = {
                         // https://github.com/facebookincubator/create-react-app/issues/2677
                         ident: 'postcss',
                         plugins: () => [
-                         // require('postcss-flexbugs-fixes'),
+                          // require('postcss-flexbugs-fixes'),
                           autoprefixer({
                             browsers: [
                               '>1%',

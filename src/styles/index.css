@@ -1,4 +1,12 @@
 @import '~bootstrap-css-only';
-body{
-  color: red;
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.mainApp{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
