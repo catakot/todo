@@ -22,6 +22,7 @@ class TripListItemComponent extends Component {
   onTitleKeyUp = (e) => {
     if (e.key == 'Enter') {
       this.setState({ isEditMode: false });
+      this.props.onSave(this.state.attrs);
     }
   }
 
@@ -85,7 +86,7 @@ class TripListItemComponent extends Component {
     let className = this.state.attrs.status == TripStatus.COMPLETED ? 'trip__li__completed' : 'trip__li__todo';
     className += ' list-group-item';
     return (
-      <li className={className} onDoubleClick={this.startEditItem}>
+      <li className={className} onDoubleClick={this.startEditItem} onClick={this.props.onClick}>
         <span>{this.state.attrs.title}</span>
         <div className="text-center">
           <small>

@@ -11,7 +11,7 @@ import 'styles/map.css';
 class MapComponent extends Component {
   static propTypes = {
     map: PropTypes.object.isRequired,
-    center: PropTypes.array,
+    center: PropTypes.object,
     zoom: PropTypes.number
   };
 
@@ -26,6 +26,18 @@ class MapComponent extends Component {
   componentDidMount = () => {
     if (this.props.map) {
       this.createMapView();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.center !== prevProps.center ||
+      this.props.zoom !== prevProps.zoom) {
+      this.state.esriMapView.goTo({
+        target: this.props.center,
+        zoom: this.props.zoom
+      }, {
+          easing: 'ease-in-out'
+        });
     }
   }
 

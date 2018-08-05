@@ -13,6 +13,13 @@ const initialState = {
 
 export default function (state = initialState, action) {
     switch (action.type) {
+        case MapActions.MAP_ZOOM_TO: {
+            let mapPosition = {
+                zoom: 9,
+                center: action.target.geometry
+            };
+            return { ...{}, ...state, ...mapPosition };
+        }
         default:
             return state;
     }

@@ -9,8 +9,7 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case TripActions.TRIP_CREATE: {
-      let tripsCollection = state.tripsCollection.slice();
-      tripsCollection.push(action.trip);
+      let tripsCollection = addItemInReversOrder(state.tripsCollection, action.trip);
       return Object.assign({}, state, { tripsCollection: tripsCollection });
     }
     case TripActions.TRIP_REMOVE: {
@@ -18,12 +17,7 @@ export default function (state = initialState, action) {
       return Object.assign({}, state, { tripsCollection: tripsCollection });
     }
     case TripActions.TRIP_UPDATE: {
-      let tripsCollection = state.tripsCollection.map(item => {
-        if (item.attributes.id == action.trip.attributes.id) {
-          return action.trip;
-        }
-        return item;
-      });
+      let tripsCollection = addItemInReversOrder(state.tripsCollection, action.trip);
       return Object.assign({}, state, { tripsCollection: tripsCollection });
     }
     case TripActions.TRIPS_LOADED: {
@@ -33,4 +27,25 @@ export default function (state = initialState, action) {
       return state;
   }
 }
+
+const addItemInReversOrder = (sourceCollection, itemToInsert) => {
+  let resultCollection = [];
+  let added = false;
+  sourceCollection.forEach(item => {
+    if (item.attributes.id == itemToInsert.attributes.id) {
+      return;
+    }
+    if (item.attributes.title > itemToInsert.attributes.title || added) {
+      resultCollection.push(item);
+    } else {
+      resultCollection.push(itemToInsert);
+      resultCollection.push(item);
+      added = true;
+    }
+  });
+  if (!added) {
+    resultCollection.push(itemToInsert);
+  }
+  return resultCollection;
+};
 

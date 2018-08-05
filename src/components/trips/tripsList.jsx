@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as TripActions from 'appRedux/actions/trip';
+import { zoomTo } from 'appRedux/actions/map';
 
 import TripListItem from './tripListItem';
 import 'styles/tripsList.css';
@@ -35,13 +36,18 @@ class TripsListComponent extends Component {
     dispatch(TripActions.updateTripAttrs(attrs));
   }
 
+  onListItemClick = (trip) => {
+    let { dispatch } = this.props;
+    dispatch(zoomTo(trip));
+  }
+
   renderTripsList = () => {
     return (<div className="d-flex p-3 tripsList__container">
       <div>
-        <ul className="list-group">
+        <ul className="list-group" onClick={this.onListClick}>
           {this.props.tripsCollection.map((trip, i) =>
             <TripListItem key={trip.attributes.id} attrs={trip.attributes} tripid={trip.attributes.id}
-              onSave={this.onSaveChanged} onRemove={this.onRemoveItem}>
+              onSave={this.onSaveChanged} onRemove={this.onRemoveItem} onClick={() => this.onListItemClick(trip)}>
             </TripListItem>
           )}
         </ul>

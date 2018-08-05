@@ -1,3 +1,4 @@
+import {v4} from 'node-uuid';
 import EsriGraphic from "esri/Graphic";
 import TripStatus from 'const/tripStatus';
 import * as MapActions from 'appRedux/actions/map';
@@ -11,7 +12,7 @@ export function appTrip(mapPoint) {
   return (dispatch, getState) => {
     let id = getState().trips.tripsCollection.length;
     let attrs = {
-      id: id,
+      id: v4(),
       title: 'New place to visit',
       status: TripStatus.NEW
     };

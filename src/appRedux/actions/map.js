@@ -3,6 +3,7 @@
 export const MAP_ADD_GRAPHIC = 'MAP_ADD_GRAPHIC';
 export const MAP_REMOVE_GRAPHIC = 'MAP_REMOVE_GRAPHIC';
 export const MAP_ADD_MANY_GRAPHICS = "MAP_ADD_MANY_GRAPHICS";
+export const MAP_ZOOM_TO = "MAP_ZOOM_TO";
 
 export function addPinToMap(graphic) {
   return (dispatch, getState) => {
@@ -37,5 +38,12 @@ export function addManyPinsToMap(graphics) {
       type: MAP_ADD_MANY_GRAPHICS,
       graphics: graphics
     });
+  };
+}
+
+export function zoomTo(target) {
+  return {
+    type: MAP_ZOOM_TO,
+    target: target
   };
 }
