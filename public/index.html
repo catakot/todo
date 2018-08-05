@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <link rel="stylesheet" href="https://js.arcgis.com/4.8/esri/css/main.css" />
+
+  <link rel="shortcut icon" href="<% JSON.stringify(htmlWebpackPlugin.options.envOptions.PUBLIC_URL)%>/favicon.ico">
+
+  <!-- <link rel="stylesheet" href=' htmlWebpackPlugin.files.css ' /> -->
+  <title>Map App</title>
+  <script src="https://js.arcgis.com/4.8/"></script>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root">
+
+  </div>
+  <script>
+    // Make sure the basepath ends with a slash
+    require(["dojo/domReady!",
+      '<%= htmlWebpackPlugin.files.js[0] %>'     // <-- Your application
+    ],
+      function (vendor, app) {
+        window.mainApp.init();
+        // Do whatewer initialization needed here...
+      });
+  </script>
+</body>
+
+</html>
